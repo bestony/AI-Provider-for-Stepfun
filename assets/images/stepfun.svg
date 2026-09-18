@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" role="img" aria-label="StepFun">
+  <title>StepFun</title>
+  <!--
+    StepFun brand mark, from Lobe Icons (https://github.com/lobehub/lobe-icons), MIT licensed.
+    Trademark of StepFun; used only to identify the service this plugin connects to.
+  -->
+  <path fill="currentColor" fill-rule="evenodd" d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM8.762 19.614H4.376v-4.386h4.386v4.386zm5.423 0H9.798v-4.386h4.387v4.386zm0-5.42H9.798V9.81h4.387v4.386zm0-5.418H9.798V4.39h4.387v4.386zm5.422-.004h-4.386V4.386h4.386v4.386z"/>
+</svg>
