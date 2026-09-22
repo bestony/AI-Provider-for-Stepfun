@@ -28,8 +28,16 @@ if (!defined('ABSPATH')) {
     define('ABSPATH', $root . '/');
 }
 
+/*
+ * WordPress keys `plugin_action_links_*` and resolves `load_plugin_textdomain()`'s path against the
+ * plugins directory, so the harness has to know where that is: the plugin root's parent.
+ */
+$GLOBALS['stepfun_plugins_dir'] = dirname($root);
+$GLOBALS['stepfun_plugin_dir'] = $root;
+
 require $root . '/src/autoload.php';
 
+use StepFun\AiProvider\Admin\StepfunSettings;
 use StepFun\AiProvider\Util\StepfunConfig;
 use StepFun\AiProvider\Util\StepfunModelCatalog;
 
@@ -178,7 +186,10 @@ check(
 // --- Configuration defaults. ------------------------------------------------------------------
 check(StepfunConfig::getBaseUrl() === 'https://api.stepfun.com/v1', 'default base URL');
 check(StepfunConfig::getRequestTimeout() >= 60.0, 'request timeout is long enough for an LLM call');
-check(StepfunConfig::getUserAgent() === 'ai-provider-for-stepfun/1.0.1', 'user agent identifies the plugin');
+check(
+    StepfunConfig::getUserAgent() === 'ai-provider-for-stepfun/' . StepfunConfig::VERSION,
+    'user agent identifies the plugin and its version'
+);
 check(StepfunConfig::getStructuredOutputMode() === 'json_schema', 'structured output defaults to json_schema');
 check(StepfunConfig::getDefaultModelId() === 'step-3.7-flash', 'default chat model');
 check(StepfunConfig::getImageModelId() === 'step-image-edit-2', 'default image model');
@@ -670,6 +681,82 @@ function use_stepfun_plugin_checks(): void
         {
             return $text;
         }
+
+        /**
+         * Returns the URL-escaped string unchanged.
+         *
+         * @param string $url The URL.
+         * @return string The URL.
+         */
+        function esc_url(string $url): string
+        {
+            return $url;
+        }
+
+        /**
+         * Returns the attribute-escaped string unchanged.
+         *
+         * @param string $text The text.
+         * @return string The text.
+         */
+        function esc_attr(string $text): string
+        {
+            return $text;
+        }
+
+        /**
+         * Builds an admin URL the way WordPress does, without needing WordPress.
+         *
+         * @param string $path The path, relative to wp-admin.
+         * @return string The absolute admin URL.
+         */
+        function admin_url(string $path = ''): string
+        {
+            return 'https://example.test/wp-admin/' . $path;
+        }
+
+        /**
+         * Returns the plugin file's path relative to the plugins directory, as WordPress does.
+         *
+         * @param string $file The plugin file path.
+         * @return string The path relative to the plugins directory.
+         */
+        function plugin_basename(string $file): string
+        {
+            $dir = $GLOBALS['stepfun_plugins_dir'] ?? null;
+            if (is_string($dir) && strpos($file, $dir) === 0) {
+                return ltrim(substr($file, strlen($dir)), '/');
+            }
+
+            return basename($file);
+        }
+
+        /**
+         * Reads from an in-memory option table, so option resolution can be exercised.
+         *
+         * @param string $name The option name.
+         * @param mixed $default The default when the option is not set.
+         * @return mixed The option value.
+         */
+        function get_option(string $name, $default = false)
+        {
+            return $GLOBALS['stepfun_options'][$name] ?? $default;
+        }
+
+        /**
+         * Records that translations were loaded; the harness has no .mo files to load.
+         *
+         * @param string $domain The text domain.
+         * @param bool $deprecated Unused.
+         * @param string|null $path The languages directory.
+         * @return bool Always true.
+         */
+        function load_plugin_textdomain(string $domain, bool $deprecated = false, ?string $path = null): bool
+        {
+            $GLOBALS['stepfun_textdomain'] = [$domain, $path];
+
+            return true;
+        }
     }
 
     require dirname(__DIR__) . '/ai-provider-for-stepfun.php';
@@ -789,6 +876,150 @@ function use_stepfun_plugin_checks(): void
         'STEPFUN_DEFAULT_MODEL is honoured by the preference filter'
     );
     putenv('STEPFUN_DEFAULT_MODEL');
+
+    use_stepfun_settings_checks($apply);
+}
+
+/**
+ * Checks the settings page wiring: the base URL option, its validation, and the Plugins shortcut.
+ *
+ * @param callable $apply Applies a recorded filter by hook name.
+ * @return void
+ */
+function use_stepfun_settings_checks(callable $apply): void
+{
+    // --- The offered base URLs. -----------------------------------------------------------------
+    $choices = StepfunConfig::getBaseUrlChoices();
+    check(count($choices) === 4, 'exactly four StepFun base URLs are offered');
+    check($choices[0] === StepfunConfig::DEFAULT_BASE_URL, 'the default base URL is offered first');
+    foreach (
+        [
+        'https://api.stepfun.com/v1',
+        'https://api.stepfun.com/step_plan/v1',
+        'https://api.stepfun.ai/v1',
+        'https://api.stepfun.ai/step_plan/v1',
+        ] as $url
+    ) {
+        check(StepfunConfig::isAllowedBaseUrl($url), "{$url} is an allowed base URL");
+    }
+    check(
+        !StepfunConfig::isAllowedBaseUrl('https://evil.example.com/v1'),
+        'an unlisted host is not an allowed base URL'
+    );
+
+    // --- Resolution: env > option > default. ----------------------------------------------------
+    $GLOBALS['stepfun_options'] = [];
+    check(
+        StepfunConfig::getBaseUrl() === StepfunConfig::DEFAULT_BASE_URL,
+        'no option and no constant yields the default base URL'
+    );
+
+    $GLOBALS['stepfun_options'][StepfunConfig::OPTION_NAME] = 'https://api.stepfun.ai/v1';
+    check(
+        StepfunConfig::getBaseUrl() === 'https://api.stepfun.ai/v1',
+        'the stored option becomes the base URL'
+    );
+
+    // A value written straight to the database must not reach the network.
+    $GLOBALS['stepfun_options'][StepfunConfig::OPTION_NAME] = 'https://evil.example.com/v1';
+    check(
+        StepfunConfig::getBaseUrl() === StepfunConfig::DEFAULT_BASE_URL,
+        'an unlisted stored option falls back to the default base URL'
+    );
+
+    $GLOBALS['stepfun_options'][StepfunConfig::OPTION_NAME] = 'https://api.stepfun.ai/v1/';
+    check(
+        StepfunConfig::getBaseUrl() === 'https://api.stepfun.ai/v1',
+        'a stored trailing slash is trimmed before use'
+    );
+
+    // The constant still wins, so an existing deployment is not silently repointed by the UI.
+    putenv('STEPFUN_BASE_URL=https://api.stepfun.com/step_plan/v1');
+    check(
+        StepfunConfig::getBaseUrl() === 'https://api.stepfun.com/step_plan/v1',
+        'STEPFUN_BASE_URL overrides the stored option'
+    );
+    putenv('STEPFUN_BASE_URL');
+    $GLOBALS['stepfun_options'] = [];
+
+    // --- Every choice must actually drive request URL building. ---------------------------------
+    $provider = \StepFun\AiProvider\Provider\StepfunProvider::class;
+    foreach (StepfunConfig::getBaseUrlChoices() as $choice) {
+        $GLOBALS['stepfun_options'][StepfunConfig::OPTION_NAME] = $choice;
+        check(
+            $provider::url('chat/completions') === $choice . '/chat/completions',
+            "a request for {$choice} joins to {$choice}/chat/completions"
+        );
+    }
+
+    // The SDK joins with `baseUrl() . '/' . ltrim($path, '/')`, so a leading slash must not double up.
+    $GLOBALS['stepfun_options'][StepfunConfig::OPTION_NAME] = 'https://api.stepfun.ai/step_plan/v1';
+    check(
+        $provider::url('/models') === 'https://api.stepfun.ai/step_plan/v1/models',
+        'a leading slash on the path does not produce a double slash'
+    );
+    check(
+        $provider::url() === 'https://api.stepfun.ai/step_plan/v1',
+        'an empty path yields the base URL itself'
+    );
+    $GLOBALS['stepfun_options'] = [];
+
+    // --- Sanitisation of a submitted value. -----------------------------------------------------
+    check(
+        StepfunSettings::sanitize('https://api.stepfun.ai/step_plan/v1')
+            === 'https://api.stepfun.ai/step_plan/v1',
+        'an allowed base URL survives sanitisation'
+    );
+    check(
+        StepfunSettings::sanitize('https://api.stepfun.ai/step_plan/v1/')
+            === 'https://api.stepfun.ai/step_plan/v1',
+        'a submitted trailing slash is trimmed'
+    );
+    check(
+        StepfunSettings::sanitize('https://evil.example.com/v1') === StepfunConfig::DEFAULT_BASE_URL,
+        'an unlisted submitted URL is replaced by the default'
+    );
+    check(
+        StepfunSettings::sanitize(['https://api.stepfun.ai/v1']) === StepfunConfig::DEFAULT_BASE_URL,
+        'an array submission is replaced by the default'
+    );
+    check(
+        StepfunSettings::sanitize(null) === StepfunConfig::DEFAULT_BASE_URL,
+        'a null submission is replaced by the default'
+    );
+
+    // --- The Plugins-screen shortcut. -----------------------------------------------------------
+    $hook = 'plugin_action_links_' . plugin_basename(dirname(__DIR__) . '/ai-provider-for-stepfun.php');
+    $links = $apply($hook, ['deactivate' => '<a href="#">Deactivate</a>']);
+    check(count($links) === 2, 'the shortcut is appended to the existing plugin action links');
+    $shortcut = (string) end($links);
+    check(
+        strpos($shortcut, 'Setup Step Plan') !== false,
+        'the plugin row offers a Setup Step Plan link'
+    );
+    check(
+        strpos($shortcut, 'options-general.php?page=' . StepfunSettings::PAGE_SLUG) !== false,
+        'the Setup Step Plan link points at the settings page'
+    );
+    check(
+        ($links['deactivate'] ?? null) === '<a href="#">Deactivate</a>',
+        'existing plugin action links are preserved untouched'
+    );
+
+    // --- Translations. --------------------------------------------------------------------------
+    $callbacks = $GLOBALS['stepfun_actions']['init'][10] ?? [];
+    check($callbacks !== [], 'the text domain is loaded on init');
+    foreach ($callbacks as $callback) {
+        $callback();
+    }
+    check(
+        ($GLOBALS['stepfun_textdomain'][0] ?? null) === 'ai-provider-for-stepfun',
+        'the text domain matches the plugin header'
+    );
+    check(
+        ($GLOBALS['stepfun_textdomain'][1] ?? null) === basename($GLOBALS['stepfun_plugin_dir']) . '/languages',
+        'translations are loaded from the plugin languages directory'
+    );
 }
 
 /**

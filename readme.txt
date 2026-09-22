@@ -3,7 +3,7 @@ Contributors:      bestony
 Tags:              ai, connector, stepfun, artificial-intelligence, vision
 Requires at least: 7.0
 Tested up to:      7.1
-Stable tag:        1.0.1
+Stable tag:        1.1.0
 Requires PHP:      7.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,6 +22,8 @@ Adds [StepFun](https://platform.stepfun.com/) (阶跃星辰) as a provider for t
 * Image generation with the `step-image-*` / `step-2x-*` text-to-image models, returning either an
   inline image or a URL.
 * Reasoning output is surfaced as thought parts rather than mixed into the answer text.
+* A **Settings → AI Provider for StepFun** page to pick which StepFun host to talk to, including the
+  Step Plan endpoints.
 
 == Screenshots ==
 
@@ -37,6 +39,25 @@ Adds [StepFun](https://platform.stepfun.com/) (阶跃星辰) as a provider for t
 A StepFun account with API access is required. Create a key at
 [https://platform.stepfun.com/interface-key](https://platform.stepfun.com/interface-key).
 
+== Settings ==
+
+**Settings → AI Provider for StepFun** picks which StepFun host the provider talks to. Four hosts are
+offered:
+
+* Stepfun.com — `https://api.stepfun.com/v1` (default)
+* StepPlan at Stepfun.com — `https://api.stepfun.com/step_plan/v1`
+* Stepfun.ai — `https://api.stepfun.ai/v1`
+* Step Plan at Stepfun.ai — `https://api.stepfun.ai/step_plan/v1`
+
+The chosen host is used for the model list and for every generation request. It is stored per site, so
+each site on a multisite network configures its own. There is also a **Setup Step Plan** link in the
+plugin's row on the Plugins screen that jumps straight to this page.
+
+Only these four hosts can be selected: a value that is not one of them (written to the database
+directly, for example) falls back to the default. Setting `STEPFUN_BASE_URL` overrides the choice.
+
+The page is available in English, Simplified Chinese (`zh_CN`) and Traditional Chinese (`zh_TW`).
+
 == Configuration ==
 
 The API key is read, in order of precedence, from:
@@ -51,8 +72,8 @@ All optional settings are environment variables or PHP constants:
   Default: `step-3.7-flash`.
 * `STEPFUN_IMAGE_MODEL` — image model to prefer in the image generation feature.
   Default: `step-image-edit-2`.
-* `STEPFUN_BASE_URL` — API base URL. Default: `https://api.stepfun.com/v1`. Set to
-  `https://api.stepfun.ai/v1` for the international platform.
+* `STEPFUN_BASE_URL` — API base URL. Overrides the value chosen on Settings → AI Provider for StepFun
+  (see below).
 * `STEPFUN_MODEL_INPUT_MODALITIES` — comma-separated list of modalities your models accept. Include
   `image` (e.g. `text,image`) to declare vision for **every** chat model, for deployments ahead of
   the built-in list.
@@ -90,8 +111,8 @@ provider stays silent when the SDK is missing.
 
 = Do I need to configure anything in the database? =
 
-Only the API key, and only if you cannot set an environment variable or constant. The provider adds
-no settings page of its own: everything it needs is on Settings → Connectors.
+The API key (on Settings → Connectors) and, if you do not use the default host, the base URL chosen on
+Settings → AI Provider for StepFun. Both can instead be set with an environment variable or constant.
 
 = Why does the plugin require WordPress 7.0? =
 
@@ -147,8 +168,9 @@ External services below for the exact endpoints.
 
 = Is there a settings page? =
 
-No. Everything this plugin needs lives on Settings → Connectors, and the optional behaviour is
-controlled by environment variables or constants.
+Yes, one: **Settings → AI Provider for StepFun**, which chooses the API host (see Settings above). The
+API key still lives on Settings → Connectors, and the remaining optional behaviour is controlled by
+environment variables or constants.
 
 == External services ==
 
@@ -157,8 +179,8 @@ This plugin connects to the StepFun API, an external service operated by 上海�
 site. StepFun is a paid service: requests are billed to your StepFun account, and an account with API
 access is required.
 
-The plugin contacts the following endpoints under `https://api.stepfun.com/v1` (or under
-`STEPFUN_BASE_URL` if you set it):
+The plugin contacts the following endpoints under the selected base URL — `https://api.stepfun.com/v1`
+by default, or whichever host is chosen on Settings → AI Provider for StepFun:
 
 * `GET /models` — called when the AI Client refreshes its list of available models, and when it checks
   whether your credentials work. No user content is sent; only your API key, so StepFun can return the
@@ -183,6 +205,14 @@ This service is provided by StepFun:
 
 == Changelog ==
 
+= 1.1.0 =
+* New: Settings → AI Provider for StepFun, to choose between the StepFun and Step Plan API hosts on
+  the mainland-China and international platforms. The choice applies to the model list and every
+  generation request, and is stored per site.
+* New: a **Setup Step Plan** link in the plugin's row on the Plugins screen.
+* Added English, Simplified Chinese (`zh_CN`) and Traditional Chinese (`zh_TW`) translations for the
+  admin screens.
+
 = 1.0.1 =
 * Stop reading the `connectors_ai_stepfun_api_key` option directly. Whether a StepFun credential is
   configured is now asked of the AI Client, so the plugin never handles the key the user saved in
@@ -194,6 +224,10 @@ This service is provided by StepFun:
   text-to-image generation with StepFun (阶跃星辰) models.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Adds a settings page for choosing the StepFun API host (including the Step Plan endpoints). The
+default behaviour is unchanged.
 
 = 1.0.1 =
 The stored StepFun API key is no longer read by the plugin; the AI Client reports whether a credential is configured.

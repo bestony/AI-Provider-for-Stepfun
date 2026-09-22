@@ -12,6 +12,8 @@ vision and image generation with Step models.
   Generation works.
 * Text-to-image generation with the `step-image-*` / `step-2x-*` models, returned inline or as a URL.
 * Reasoning output surfaces as thought parts instead of being mixed into the answer.
+* A **Settings → AI Provider for StepFun** page that picks which StepFun host to talk to, including
+  the Step Plan endpoints.
 
 ## Requirements
 
@@ -23,7 +25,26 @@ vision and image generation with Step models.
 
 Download the zip from [Releases](../../releases) and upload it through **Plugins → Add New → Upload
 Plugin**, or copy the plugin folder to `wp-content/plugins/ai-provider-for-stepfun/`. Activate it,
-then open **Settings → Connectors**, open the StepFun card and paste your API key.
+then open **Settings → Connectors**, open the StepFun card and paste your API key. If your key is for
+Step Plan, also pick the matching host on **Settings → AI Provider for StepFun**.
+
+## Settings
+
+**Settings → AI Provider for StepFun** chooses the API host:
+
+| Option | Base URL |
+| --- | --- |
+| Stepfun.com (default) | `https://api.stepfun.com/v1` |
+| StepPlan at Stepfun.com | `https://api.stepfun.com/step_plan/v1` |
+| Stepfun.ai | `https://api.stepfun.ai/v1` |
+| Step Plan at Stepfun.ai | `https://api.stepfun.ai/step_plan/v1` |
+
+The choice is stored per site and is used for the model list and every generation request. A value
+outside this list falls back to the default. The plugin's row on the Plugins screen also has a
+**Setup Step Plan** shortcut to the page.
+
+The admin screens are available in English, Simplified Chinese (`zh_CN`) and Traditional Chinese
+(`zh_TW`).
 
 ## Configuration
 
@@ -39,7 +60,7 @@ Optional settings are environment variables or PHP constants:
 | --- | --- | --- |
 | `STEPFUN_DEFAULT_MODEL` | `step-3.7-flash` | Chat model to prefer in pickers and feature filters |
 | `STEPFUN_IMAGE_MODEL` | `step-image-edit-2` | Image model to prefer in the image generation feature |
-| `STEPFUN_BASE_URL` | `https://api.stepfun.com/v1` | API base URL; use `https://api.stepfun.ai/v1` for the international platform |
+| `STEPFUN_BASE_URL` | the host chosen in Settings | API base URL; overrides the settings page |
 | `STEPFUN_MODEL_INPUT_MODALITIES` | from the built-in list | Comma-separated input modalities, e.g. `text,image`, to declare vision for every chat model |
 | `STEPFUN_STRUCTURED_OUTPUT` | `json_schema` | `json_schema`, `json_object`, or `none` — use `json_object` if a JSON feature fails with `400 ... "param":"response_format"` |
 | `STEPFUN_SIZE_LANDSCAPE` / `STEPFUN_SIZE_PORTRAIT` / `STEPFUN_SIZE_SQUARE` | `1360x768` / `768x1360` / `1024x1024` | Override the `size` sent per orientation |

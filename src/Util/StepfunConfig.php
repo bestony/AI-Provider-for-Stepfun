@@ -3,8 +3,8 @@
 /**
  * Plugin configuration reader.
  *
- * Intentionally free of WordPress functions so it can be loaded (and exercised) outside WordPress.
- * Every value is resolved as: environment variable > PHP constant > built-in default.
+ * Loads outside WordPress (the self-check exercises it that way), so every WordPress call is guarded.
+ * Values are resolved as: environment variable > PHP constant > stored option > built-in default.
  *
  * @package StepFun\AiProvider
  */
@@ -26,17 +26,49 @@ final class StepfunConfig
      *
      * @var string
      */
-    public const VERSION = '1.0.1';
+    public const VERSION = '1.1.0';
+
+    /**
+     * The option the Settings → AI Provider for StepFun page stores the chosen base URL in.
+     *
+     * @var string
+     */
+    public const OPTION_NAME = 'stepfun_base_url';
 
     /**
      * Base URL of the StepFun API (mainland-China platform).
      *
-     * The international platform serves the same API at `https://api.stepfun.ai/v1`; switch with
-     * `STEPFUN_BASE_URL`.
+     * @var string
+     */
+    public const BASE_URL_STEPFUN_COM = 'https://api.stepfun.com/v1';
+
+    /**
+     * Base URL of the Step Plan API on the mainland-China platform.
      *
      * @var string
      */
-    public const DEFAULT_BASE_URL = 'https://api.stepfun.com/v1';
+    public const BASE_URL_STEPFUN_COM_STEP_PLAN = 'https://api.stepfun.com/step_plan/v1';
+
+    /**
+     * Base URL of the StepFun API (international platform).
+     *
+     * @var string
+     */
+    public const BASE_URL_STEPFUN_AI = 'https://api.stepfun.ai/v1';
+
+    /**
+     * Base URL of the Step Plan API on the international platform.
+     *
+     * @var string
+     */
+    public const BASE_URL_STEPFUN_AI_STEP_PLAN = 'https://api.stepfun.ai/step_plan/v1';
+
+    /**
+     * The base URL used when nothing is configured.
+     *
+     * @var string
+     */
+    public const DEFAULT_BASE_URL = self::BASE_URL_STEPFUN_COM;
 
     /**
      * The provider ID used by the SDK registry, the Connectors option name and the filter tuples.
@@ -93,15 +125,73 @@ final class StepfunConfig
     }
 
     /**
+     * Gets the base URLs the settings page offers.
+     *
+     * @return list<string> The allowed base URLs.
+     */
+    public static function getBaseUrlChoices(): array
+    {
+        return [
+            self::BASE_URL_STEPFUN_COM,
+            self::BASE_URL_STEPFUN_COM_STEP_PLAN,
+            self::BASE_URL_STEPFUN_AI,
+            self::BASE_URL_STEPFUN_AI_STEP_PLAN,
+        ];
+    }
+
+    /**
+     * Whether a URL is one of the offered base URLs.
+     *
+     * @param string $url The URL to check, without a trailing slash.
+     * @return bool Whether the URL may be used.
+     */
+    public static function isAllowedBaseUrl(string $url): bool
+    {
+        return in_array($url, self::getBaseUrlChoices(), true);
+    }
+
+    /**
      * Gets the API base URL.
+     *
+     * Resolved as: environment variable/constant > the stored option > the built-in default. The
+     * option is validated on read as well as on save, so a value written directly to the database
+     * (WP-CLI, a migration, a stray filter) can never point requests at an unlisted host.
      *
      * @return string The base URL, without a trailing slash.
      */
     public static function getBaseUrl(): string
     {
         $url = self::env('STEPFUN_BASE_URL');
+        if ($url !== '') {
+            return rtrim($url, '/');
+        }
 
-        return $url === '' ? self::DEFAULT_BASE_URL : rtrim($url, '/');
+        $stored = self::getStoredBaseUrl();
+
+        return $stored === '' ? self::DEFAULT_BASE_URL : $stored;
+    }
+
+    /**
+     * Reads the base URL from the option, if WordPress and a valid value are available.
+     *
+     * Guarded so this class keeps working outside WordPress (see the file docblock).
+     *
+     * @return string The stored base URL, or an empty string when there is none.
+     */
+    private static function getStoredBaseUrl(): string
+    {
+        if (!function_exists('get_option')) {
+            return '';
+        }
+
+        $value = get_option(self::OPTION_NAME, '');
+        if (!is_string($value)) {
+            return '';
+        }
+
+        $value = rtrim($value, '/');
+
+        return self::isAllowedBaseUrl($value) ? $value : '';
     }
 
     /**

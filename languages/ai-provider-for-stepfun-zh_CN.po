@@ -1,0 +1,84 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AI Provider for StepFun 1.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/bestony/AI-Provider-for-Stepfun/issues\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: ai-provider-for-stepfun\n"
+
+#. Plugin Name of the plugin
+#: ai-provider-for-stepfun.php
+#: src/Admin/StepfunSettings.php:95
+#: src/Admin/StepfunSettings.php:96
+msgid "AI Provider for StepFun"
+msgstr "StepFun AI 提供商"
+
+#. Plugin URI of the plugin
+#: ai-provider-for-stepfun.php
+msgid "https://github.com/bestony/AI-Provider-for-Stepfun"
+msgstr ""
+
+#. Description of the plugin
+#: ai-provider-for-stepfun.php
+msgid "StepFun (阶跃星辰) provider for the WordPress AI Client."
+msgstr ""
+
+#. Author of the plugin
+#: ai-provider-for-stepfun.php
+msgid "Bestony"
+msgstr ""
+
+#. Author URI of the plugin
+#: ai-provider-for-stepfun.php
+msgid "https://github.com/bestony"
+msgstr ""
+
+#: src/Admin/StepfunSettings.php:73
+msgid "StepFun API endpoint"
+msgstr "StepFun API 端点"
+
+#: src/Admin/StepfunSettings.php:80
+msgid "API base URL"
+msgstr "API 基础 URL"
+
+#: src/Admin/StepfunSettings.php:115
+msgid "Setup Step Plan"
+msgstr "设置 Step Plan"
+
+#: src/Admin/StepfunSettings.php:165
+msgid "Choose which StepFun API host the provider talks to. Pick a Step Plan host if your key was provisioned for Step Plan."
+msgstr "选择提供商连接的 StepFun API 主机。如果你的密钥是为 Step Plan 开通的，请选择 Step Plan 主机。"
+
+#: src/Admin/StepfunSettings.php:187
+msgid "The model list and every generation request use this base URL. The STEPFUN_BASE_URL environment variable or PHP constant, when set, overrides it."
+msgstr "模型列表和所有生成请求都使用此基础 URL。设置 STEPFUN_BASE_URL 环境变量或 PHP 常量后将覆盖此设置。"
+
+#: src/Admin/StepfunSettings.php:204
+msgid "Stepfun.com"
+msgstr "Stepfun.com"
+
+#: src/Admin/StepfunSettings.php:205
+msgid "StepPlan at Stepfun.com"
+msgstr "Stepfun.com 的 StepPlan"
+
+#: src/Admin/StepfunSettings.php:206
+msgid "Stepfun.ai"
+msgstr "Stepfun.ai"
+
+#: src/Admin/StepfunSettings.php:207
+msgid "Step Plan at Stepfun.ai"
+msgstr "Stepfun.ai 的 Step Plan"
+
+#. translators: %s: model ID.
+#: src/Provider/StepfunProvider.php:82
+#, php-format
+msgid "The model \"%s\" has no supported capability for StepFun."
+msgstr ""
+
+#: src/Provider/StepfunProvider.php:107
+msgid "Text, vision and image generation with StepFun (阶跃星辰) models."
+msgstr "使用 StepFun（阶跃星辰）模型进行文本、视觉和图像生成。"

@@ -6,7 +6,7 @@
  * Description:       StepFun (阶跃星辰) provider for the WordPress AI Client.
  * Requires at least: 7.0
  * Requires PHP:      7.4
- * Version:           1.0.1
+ * Version:           1.1.0
  * Author:            Bestony
  * Author URI:        https://github.com/bestony
  * License:           GPL-2.0-or-later
@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace StepFun\AiProvider;
 
+use StepFun\AiProvider\Admin\StepfunSettings;
 use StepFun\AiProvider\Provider\StepfunProvider;
 use StepFun\AiProvider\Util\StepfunConfig;
 use WordPress\AiClient\AiClient;
@@ -29,6 +30,28 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/src/autoload.php';
+
+/**
+ * Loads the plugin's translations.
+ *
+ * @return void
+ */
+function load_textdomain(): void
+{
+    load_plugin_textdomain(
+        'ai-provider-for-stepfun',
+        false,
+        dirname(plugin_basename(__FILE__)) . '/languages'
+    );
+}
+
+add_action('init', __NAMESPACE__ . '\\load_textdomain');
+
+/*
+ * The admin page and the Plugins-screen shortcut are admin-only, and `plugin_action_links_*` is
+ * itself only applied in the admin, so registering unconditionally costs nothing on the front end.
+ */
+StepfunSettings::register(__FILE__);
 
 /**
  * Registers the provider with the AI Client.
