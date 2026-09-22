@@ -26,10 +26,10 @@ final class StepfunConfig
      *
      * @var string
      */
-    public const VERSION = '1.1.0';
+    public const VERSION = '1.2.0';
 
     /**
-     * The option the Settings → AI Provider for StepFun page stores the chosen base URL in.
+     * The option the Settings → Bestony AI Provider for StepFun page stores the chosen base URL in.
      *
      * @var string
      */
@@ -329,6 +329,6 @@ final class StepfunConfig
      */
     public static function getUserAgent(): string
     {
-        return 'ai-provider-for-stepfun/' . self::VERSION;
+        return 'bestony-ai-provider-for-stepfun/' . self::VERSION;
     }
 }

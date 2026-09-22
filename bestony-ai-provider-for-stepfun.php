@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Plugin Name:       AI Provider for StepFun
+ * Plugin Name:       Bestony AI Provider for StepFun
  * Plugin URI:        https://github.com/bestony/AI-Provider-for-Stepfun
  * Description:       StepFun (阶跃星辰) provider for the WordPress AI Client.
  * Requires at least: 7.0
  * Requires PHP:      7.4
- * Version:           1.1.0
+ * Version:           1.2.0
  * Author:            Bestony
  * Author URI:        https://github.com/bestony
  * License:           GPL-2.0-or-later
  * License URI:       https://spdx.org/licenses/GPL-2.0-or-later.html
- * Text Domain:       ai-provider-for-stepfun
+ * Text Domain:       bestony-ai-provider-for-stepfun
  *
  * @package StepFun\AiProvider
  */
@@ -39,7 +39,7 @@ require_once __DIR__ . '/src/autoload.php';
 function load_textdomain(): void
 {
     load_plugin_textdomain(
-        'ai-provider-for-stepfun',
+        'bestony-ai-provider-for-stepfun',
         false,
         dirname(plugin_basename(__FILE__)) . '/languages'
     );

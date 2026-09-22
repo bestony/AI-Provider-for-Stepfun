@@ -20,7 +20,7 @@ jobs:
         run: |
           set -euo pipefail
           tag="${GITHUB_REF_NAME#v}"
-          header=$(grep -m1 '^ \* Version:' ai-provider-for-stepfun.php | awk '{print $3}')
+          header=$(grep -m1 '^ \* Version:' bestony-ai-provider-for-stepfun.php | awk '{print $3}')
           stable=$(grep -m1 '^Stable tag:' readme.txt | awk '{print $3}')
           # The User-Agent is built from this constant, so it drifts silently if it is not checked.
           config=$(perl -ne "print \$1 if /const VERSION = '([\d.]+)'/" src/Util/StepfunConfig.php)
@@ -47,7 +47,7 @@ jobs:
       - name: Build plugin zip
         run: |
           set -euo pipefail
-          slug=ai-provider-for-stepfun
+          slug=bestony-ai-provider-for-stepfun
           zip="build/$slug-${GITHUB_REF_NAME}.zip"
           mkdir -p build
           # .gitattributes export-ignores scripts/, README.md and the CI files.

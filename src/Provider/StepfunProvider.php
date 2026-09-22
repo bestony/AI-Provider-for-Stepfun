@@ -79,7 +79,7 @@ class StepfunProvider extends AbstractApiProvider
         throw new RuntimeException(
             sprintf(
                 /* translators: %s: model ID. */
-                esc_html__('The model "%s" has no supported capability for StepFun.', 'ai-provider-for-stepfun'),
+                esc_html__('The model "%s" has no supported capability for StepFun.', 'bestony-ai-provider-for-stepfun'),
                 esc_html($modelMetadata->getId())
             )
         );
@@ -104,7 +104,7 @@ class StepfunProvider extends AbstractApiProvider
         if (version_compare(AiClient::VERSION, '1.2.0', '>=')) {
             $description = 'Text, vision and image generation with StepFun (阶跃星辰) models.';
             $args[] = function_exists('__')
-                ? __('Text, vision and image generation with StepFun (阶跃星辰) models.', 'ai-provider-for-stepfun')
+                ? __('Text, vision and image generation with StepFun (阶跃星辰) models.', 'bestony-ai-provider-for-stepfun')
                 : $description;
         }
 

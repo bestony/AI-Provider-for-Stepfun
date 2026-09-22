@@ -187,7 +187,7 @@ check(
 check(StepfunConfig::getBaseUrl() === 'https://api.stepfun.com/v1', 'default base URL');
 check(StepfunConfig::getRequestTimeout() >= 60.0, 'request timeout is long enough for an LLM call');
 check(
-    StepfunConfig::getUserAgent() === 'ai-provider-for-stepfun/' . StepfunConfig::VERSION,
+    StepfunConfig::getUserAgent() === 'bestony-ai-provider-for-stepfun/' . StepfunConfig::VERSION,
     'user agent identifies the plugin and its version'
 );
 check(StepfunConfig::getStructuredOutputMode() === 'json_schema', 'structured output defaults to json_schema');
@@ -759,7 +759,7 @@ function use_stepfun_plugin_checks(): void
         }
     }
 
-    require dirname(__DIR__) . '/ai-provider-for-stepfun.php';
+    require dirname(__DIR__) . '/bestony-ai-provider-for-stepfun.php';
 
     /*
      * The SDK resolves a PSR-18 client through HTTPlug discovery when a provider is registered. That
@@ -989,7 +989,7 @@ function use_stepfun_settings_checks(callable $apply): void
     );
 
     // --- The Plugins-screen shortcut. -----------------------------------------------------------
-    $hook = 'plugin_action_links_' . plugin_basename(dirname(__DIR__) . '/ai-provider-for-stepfun.php');
+    $hook = 'plugin_action_links_' . plugin_basename(dirname(__DIR__) . '/bestony-ai-provider-for-stepfun.php');
     $links = $apply($hook, ['deactivate' => '<a href="#">Deactivate</a>']);
     check(count($links) === 2, 'the shortcut is appended to the existing plugin action links');
     $shortcut = (string) end($links);
@@ -1013,7 +1013,7 @@ function use_stepfun_settings_checks(callable $apply): void
         $callback();
     }
     check(
-        ($GLOBALS['stepfun_textdomain'][0] ?? null) === 'ai-provider-for-stepfun',
+        ($GLOBALS['stepfun_textdomain'][0] ?? null) === 'bestony-ai-provider-for-stepfun',
         'the text domain matches the plugin header'
     );
     check(

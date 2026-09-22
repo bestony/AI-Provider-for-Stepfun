@@ -1,9 +1,9 @@
-=== AI Provider for StepFun ===
+=== Bestony AI Provider for StepFun ===
 Contributors:      bestony
 Tags:              ai, connector, stepfun, artificial-intelligence, vision
 Requires at least: 7.0
 Tested up to:      7.1
-Stable tag:        1.1.0
+Stable tag:        1.2.0
 Requires PHP:      7.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,7 +22,7 @@ Adds [StepFun](https://platform.stepfun.com/) (阶跃星辰) as a provider for t
 * Image generation with the `step-image-*` / `step-2x-*` text-to-image models, returning either an
   inline image or a URL.
 * Reasoning output is surfaced as thought parts rather than mixed into the answer text.
-* A **Settings → AI Provider for StepFun** page to pick which StepFun host to talk to, including the
+* A **Settings → Bestony AI Provider for StepFun** page to pick which StepFun host to talk to, including the
   Step Plan endpoints.
 
 == Screenshots ==
@@ -31,7 +31,7 @@ Adds [StepFun](https://platform.stepfun.com/) (阶跃星辰) as a provider for t
 
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/ai-provider-for-stepfun/`.
+1. Upload the plugin files to `/wp-content/plugins/bestony-ai-provider-for-stepfun/`.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go to Settings → Connectors, open the StepFun card and paste your API key — or define it outside
    the database (see Configuration).
@@ -41,7 +41,7 @@ A StepFun account with API access is required. Create a key at
 
 == Settings ==
 
-**Settings → AI Provider for StepFun** picks which StepFun host the provider talks to. Four hosts are
+**Settings → Bestony AI Provider for StepFun** picks which StepFun host the provider talks to. Four hosts are
 offered:
 
 * Stepfun.com — `https://api.stepfun.com/v1` (default)
@@ -72,7 +72,7 @@ All optional settings are environment variables or PHP constants:
   Default: `step-3.7-flash`.
 * `STEPFUN_IMAGE_MODEL` — image model to prefer in the image generation feature.
   Default: `step-image-edit-2`.
-* `STEPFUN_BASE_URL` — API base URL. Overrides the value chosen on Settings → AI Provider for StepFun
+* `STEPFUN_BASE_URL` — API base URL. Overrides the value chosen on Settings → Bestony AI Provider for StepFun
   (see below).
 * `STEPFUN_MODEL_INPUT_MODALITIES` — comma-separated list of modalities your models accept. Include
   `image` (e.g. `text,image`) to declare vision for **every** chat model, for deployments ahead of
@@ -112,7 +112,7 @@ provider stays silent when the SDK is missing.
 = Do I need to configure anything in the database? =
 
 The API key (on Settings → Connectors) and, if you do not use the default host, the base URL chosen on
-Settings → AI Provider for StepFun. Both can instead be set with an environment variable or constant.
+Settings → Bestony AI Provider for StepFun. Both can instead be set with an environment variable or constant.
 
 = Why does the plugin require WordPress 7.0? =
 
@@ -168,7 +168,7 @@ External services below for the exact endpoints.
 
 = Is there a settings page? =
 
-Yes, one: **Settings → AI Provider for StepFun**, which chooses the API host (see Settings above). The
+Yes, one: **Settings → Bestony AI Provider for StepFun**, which chooses the API host (see Settings above). The
 API key still lives on Settings → Connectors, and the remaining optional behaviour is controlled by
 environment variables or constants.
 
@@ -180,7 +180,7 @@ site. StepFun is a paid service: requests are billed to your StepFun account, an
 access is required.
 
 The plugin contacts the following endpoints under the selected base URL — `https://api.stepfun.com/v1`
-by default, or whichever host is chosen on Settings → AI Provider for StepFun:
+by default, or whichever host is chosen on Settings → Bestony AI Provider for StepFun:
 
 * `GET /models` — called when the AI Client refreshes its list of available models, and when it checks
   whether your credentials work. No user content is sent; only your API key, so StepFun can return the
@@ -205,8 +205,14 @@ This service is provided by StepFun:
 
 == Changelog ==
 
+= 1.2.0 =
+* Changed the plugin slug and text domain to `bestony-ai-provider-for-stepfun` and the plugin name to
+  **Bestony AI Provider for StepFun**. The release zip and the plugin folder use the new slug, so an
+  existing install must be replaced and reactivated. The settings page keeps working as before, under
+  its new title.
+
 = 1.1.0 =
-* New: Settings → AI Provider for StepFun, to choose between the StepFun and Step Plan API hosts on
+* New: Settings → Bestony AI Provider for StepFun, to choose between the StepFun and Step Plan API hosts on
   the mainland-China and international platforms. The choice applies to the model list and every
   generation request, and is stored per site.
 * New: a **Setup Step Plan** link in the plugin's row on the Plugins screen.
@@ -224,6 +230,10 @@ This service is provided by StepFun:
   text-to-image generation with StepFun (阶跃星辰) models.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Renames the plugin slug, folder, text domain and plugin name. Replace the plugin folder with the new
+zip and reactivate; the stored API key, the base URL setting and the provider ID are unchanged.
 
 = 1.1.0 =
 Adds a settings page for choosing the StepFun API host (including the Step Plan endpoints). The

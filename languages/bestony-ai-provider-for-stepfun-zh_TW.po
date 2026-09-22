@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: AI Provider for StepFun 1.1.0\n"
+"Project-Id-Version: Bestony AI Provider for StepFun 1.2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/bestony/AI-Provider-for-Stepfun/issues\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -8,32 +8,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: WP-CLI 2.12.0\n"
-"X-Domain: ai-provider-for-stepfun\n"
+"X-Domain: bestony-ai-provider-for-stepfun\n"
 
 #. Plugin Name of the plugin
-#: ai-provider-for-stepfun.php
+#: bestony-ai-provider-for-stepfun.php
 #: src/Admin/StepfunSettings.php:95
 #: src/Admin/StepfunSettings.php:96
-msgid "AI Provider for StepFun"
-msgstr "StepFun AI 提供商"
+msgid "Bestony AI Provider for StepFun"
+msgstr "Bestony StepFun AI 提供商"
 
 #. Plugin URI of the plugin
-#: ai-provider-for-stepfun.php
+#: bestony-ai-provider-for-stepfun.php
 msgid "https://github.com/bestony/AI-Provider-for-Stepfun"
 msgstr ""
 
 #. Description of the plugin
-#: ai-provider-for-stepfun.php
+#: bestony-ai-provider-for-stepfun.php
 msgid "StepFun (阶跃星辰) provider for the WordPress AI Client."
 msgstr ""
 
 #. Author of the plugin
-#: ai-provider-for-stepfun.php
+#: bestony-ai-provider-for-stepfun.php
 msgid "Bestony"
 msgstr ""
 
 #. Author URI of the plugin
-#: ai-provider-for-stepfun.php
+#: bestony-ai-provider-for-stepfun.php
 msgid "https://github.com/bestony"
 msgstr ""
 

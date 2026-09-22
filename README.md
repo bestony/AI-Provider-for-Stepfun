@@ -1,4 +1,4 @@
-# AI Provider for StepFun
+# Bestony AI Provider for StepFun
 
 [StepFun](https://platform.stepfun.com/) (阶跃星辰) as a provider for the WordPress AI Client: text,
 vision and image generation with Step models.
@@ -12,7 +12,7 @@ vision and image generation with Step models.
   Generation works.
 * Text-to-image generation with the `step-image-*` / `step-2x-*` models, returned inline or as a URL.
 * Reasoning output surfaces as thought parts instead of being mixed into the answer.
-* A **Settings → AI Provider for StepFun** page that picks which StepFun host to talk to, including
+* A **Settings → Bestony AI Provider for StepFun** page that picks which StepFun host to talk to, including
   the Step Plan endpoints.
 
 ## Requirements
@@ -24,13 +24,13 @@ vision and image generation with Step models.
 ## Install
 
 Download the zip from [Releases](../../releases) and upload it through **Plugins → Add New → Upload
-Plugin**, or copy the plugin folder to `wp-content/plugins/ai-provider-for-stepfun/`. Activate it,
+Plugin**, or copy the plugin folder to `wp-content/plugins/bestony-ai-provider-for-stepfun/`. Activate it,
 then open **Settings → Connectors**, open the StepFun card and paste your API key. If your key is for
-Step Plan, also pick the matching host on **Settings → AI Provider for StepFun**.
+Step Plan, also pick the matching host on **Settings → Bestony AI Provider for StepFun**.
 
 ## Settings
 
-**Settings → AI Provider for StepFun** chooses the API host:
+**Settings → Bestony AI Provider for StepFun** chooses the API host:
 
 | Option | Base URL |
 | --- | --- |

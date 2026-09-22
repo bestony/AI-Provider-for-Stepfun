@@ -13,7 +13,7 @@ namespace StepFun\AiProvider\Admin;
 use StepFun\AiProvider\Util\StepfunConfig;
 
 /**
- * The Settings → AI Provider for StepFun page and the Plugins-screen shortcut to it.
+ * The Settings → Bestony AI Provider for StepFun page and the Plugins-screen shortcut to it.
  *
  * Everything here goes through the WordPress Settings API: `register_setting()` owns the nonce,
  * capability check and persistence, so no option is written by hand. The page only ever offers the
@@ -70,14 +70,14 @@ final class StepfunSettings
 
         add_settings_section(
             'stepfun_base_url_section',
-            __('StepFun API endpoint', 'ai-provider-for-stepfun'),
+            __('StepFun API endpoint', 'bestony-ai-provider-for-stepfun'),
             [self::class, 'renderSection'],
             self::PAGE_SLUG
         );
 
         add_settings_field(
             StepfunConfig::OPTION_NAME,
-            __('API base URL', 'ai-provider-for-stepfun'),
+            __('API base URL', 'bestony-ai-provider-for-stepfun'),
             [self::class, 'renderField'],
             self::PAGE_SLUG,
             'stepfun_base_url_section'
@@ -92,8 +92,8 @@ final class StepfunSettings
     public static function addPage(): void
     {
         add_options_page(
-            __('AI Provider for StepFun', 'ai-provider-for-stepfun'),
-            __('AI Provider for StepFun', 'ai-provider-for-stepfun'),
+            __('Bestony AI Provider for StepFun', 'bestony-ai-provider-for-stepfun'),
+            __('Bestony AI Provider for StepFun', 'bestony-ai-provider-for-stepfun'),
             'manage_options',
             self::PAGE_SLUG,
             [self::class, 'renderPage']
@@ -112,7 +112,7 @@ final class StepfunSettings
         $links[] = sprintf(
             '<a href="%s">%s</a>',
             esc_url($url),
-            esc_html__('Setup Step Plan', 'ai-provider-for-stepfun')
+            esc_html__('Setup Step Plan', 'bestony-ai-provider-for-stepfun')
         );
 
         return $links;
@@ -164,7 +164,7 @@ final class StepfunSettings
     {
         echo '<p>' . esc_html__(
             'Choose which StepFun API host the provider talks to. Pick a Step Plan host if your key was provisioned for Step Plan.',
-            'ai-provider-for-stepfun'
+            'bestony-ai-provider-for-stepfun'
         ) . '</p>';
     }
 
@@ -186,7 +186,7 @@ final class StepfunSettings
         echo '</select>';
         echo '<p class="description">' . esc_html__(
             'The model list and every generation request use this base URL. The STEPFUN_BASE_URL environment variable or PHP constant, when set, overrides it.',
-            'ai-provider-for-stepfun'
+            'bestony-ai-provider-for-stepfun'
         ) . '</p>';
     }
 
@@ -201,10 +201,10 @@ final class StepfunSettings
     private static function getChoices(): array
     {
         $labels = [
-            StepfunConfig::DEFAULT_BASE_URL => __('Stepfun.com', 'ai-provider-for-stepfun'),
-            'https://api.stepfun.com/step_plan/v1' => __('StepPlan at Stepfun.com', 'ai-provider-for-stepfun'),
-            'https://api.stepfun.ai/v1' => __('Stepfun.ai', 'ai-provider-for-stepfun'),
-            'https://api.stepfun.ai/step_plan/v1' => __('Step Plan at Stepfun.ai', 'ai-provider-for-stepfun'),
+            StepfunConfig::DEFAULT_BASE_URL => __('Stepfun.com', 'bestony-ai-provider-for-stepfun'),
+            'https://api.stepfun.com/step_plan/v1' => __('StepPlan at Stepfun.com', 'bestony-ai-provider-for-stepfun'),
+            'https://api.stepfun.ai/v1' => __('Stepfun.ai', 'bestony-ai-provider-for-stepfun'),
+            'https://api.stepfun.ai/step_plan/v1' => __('Step Plan at Stepfun.ai', 'bestony-ai-provider-for-stepfun'),
         ];
 
         $choices = [];
