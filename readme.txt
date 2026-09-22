@@ -3,7 +3,7 @@ Contributors:      bestony
 Tags:              ai, connector, stepfun, artificial-intelligence, vision
 Requires at least: 7.0
 Tested up to:      7.1
-Stable tag:        1.0.0
+Stable tag:        1.0.1
 Requires PHP:      7.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -183,11 +183,20 @@ This service is provided by StepFun:
 
 == Changelog ==
 
+= 1.0.1 =
+* Stop reading the `connectors_ai_stepfun_api_key` option directly. Whether a StepFun credential is
+  configured is now asked of the AI Client, so the plugin never handles the key the user saved in
+  Settings → Connectors. Behaviour is unchanged: the `STEPFUN_API_KEY` constant and environment
+  variable still work.
+
 = 1.0.0 =
 * Initial release: text generation, chat history, tool calling, structured output, vision input and
   text-to-image generation with StepFun (阶跃星辰) models.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+The stored StepFun API key is no longer read by the plugin; the AI Client reports whether a credential is configured.
 
 = 1.0.0 =
 Initial release.

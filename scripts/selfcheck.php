@@ -178,7 +178,7 @@ check(
 // --- Configuration defaults. ------------------------------------------------------------------
 check(StepfunConfig::getBaseUrl() === 'https://api.stepfun.com/v1', 'default base URL');
 check(StepfunConfig::getRequestTimeout() >= 60.0, 'request timeout is long enough for an LLM call');
-check(StepfunConfig::getUserAgent() === 'ai-provider-for-stepfun/1.0.0', 'user agent identifies the plugin');
+check(StepfunConfig::getUserAgent() === 'ai-provider-for-stepfun/1.0.1', 'user agent identifies the plugin');
 check(StepfunConfig::getStructuredOutputMode() === 'json_schema', 'structured output defaults to json_schema');
 check(StepfunConfig::getDefaultModelId() === 'step-3.7-flash', 'default chat model');
 check(StepfunConfig::getImageModelId() === 'step-image-edit-2', 'default image model');
@@ -219,6 +219,7 @@ if ($sdkPath !== null && is_file($sdkPath . '/polyfills.php')) {
 
     use_stepfun_sdk_checks();
 } else {
+    check(!StepfunConfig::hasCredentials(), 'without the AI Client there are no credentials to report');
     fwrite(STDOUT, "skip  SDK-dependent checks (pass --sdk=<path to php-ai-client/src> to run them)\n");
 }
 
@@ -696,6 +697,9 @@ function use_stepfun_plugin_checks(): void
         }
     );
 
+    // Credential detection: asks the AI Client, never reads the Connectors option.
+    check(!StepfunConfig::hasCredentials(), 'no credentials before the AI Client is given one');
+
     // Registration must be on init priority 5, or the Connectors card never appears.
     $callbacks = $GLOBALS['stepfun_actions']['init'][5] ?? [];
     check($callbacks !== [], 'the provider registers on init priority 5');
@@ -711,6 +715,7 @@ function use_stepfun_plugin_checks(): void
         $callback();
     }
     check(true, 'registering the provider twice does not throw');
+    check(!StepfunConfig::hasCredentials(), 'a registered provider is not yet a credentialed one');
 
     // The filters go through WordPress' filter machinery in production; apply them by hand here.
     $apply = static function (string $hook, array $value): array {
@@ -735,7 +740,11 @@ function use_stepfun_plugin_checks(): void
         'the image preference filter changes nothing without credentials'
     );
 
-    putenv('STEPFUN_API_KEY=test-key');
+    \WordPress\AiClient\AiClient::defaultRegistry()->setProviderRequestAuthentication(
+        StepfunConfig::PROVIDER_ID,
+        new \WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication('test-key')
+    );
+    check(StepfunConfig::hasCredentials(), 'a key handed to the AI Client counts as credentials');
 
     // Preferred first, other providers preserved, and a different StepFun model kept.
     check(
@@ -780,7 +789,6 @@ function use_stepfun_plugin_checks(): void
         'STEPFUN_DEFAULT_MODEL is honoured by the preference filter'
     );
     putenv('STEPFUN_DEFAULT_MODEL');
-    putenv('STEPFUN_API_KEY');
 }
 
 /**

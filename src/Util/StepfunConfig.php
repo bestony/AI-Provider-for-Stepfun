@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace StepFun\AiProvider\Util;
 
+use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 
 /**
@@ -25,7 +26,7 @@ final class StepfunConfig
      *
      * @var string
      */
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.0.1';
 
     /**
      * Base URL of the StepFun API (mainland-China platform).
@@ -192,28 +193,29 @@ final class StepfunConfig
     }
 
     /**
-     * Whether a StepFun credential is present locally.
+     * Whether a StepFun credential is available to the AI Client.
      *
-     * A purely local check (environment, constant, stored option) so it can be called from filters
-     * without triggering a network request. The option is included because that is where the
-     * Connectors screen stores the key, and WordPress 7.0 feeds it back to the SDK on its own.
+     * Asks the AI Client instead of reading the credential itself: the key was given to WordPress by
+     * the user, so the option is not this plugin's to read. The registry carries an authentication
+     * instance once the user saved a key in Settings → Connectors (core hands it over on `init`) or
+     * set `STEPFUN_API_KEY`, which the SDK resolves when the provider is registered.
+     *
+     * Still a purely local check — no network request — so it can be called from filters.
      *
      * @return bool Whether credentials are configured.
      */
     public static function hasCredentials(): bool
     {
-        if (self::env('STEPFUN_API_KEY') !== '') {
-            return true;
+        if (!class_exists(AiClient::class)) {
+            return false;
         }
 
-        if (function_exists('get_option')) {
-            $option = get_option('connectors_ai_' . self::PROVIDER_ID . '_api_key', '');
-            if (is_string($option) && $option !== '') {
-                return true;
-            }
+        $registry = AiClient::defaultRegistry();
+        if (!$registry->hasProvider(self::PROVIDER_ID)) {
+            return false;
         }
 
-        return false;
+        return $registry->getProviderRequestAuthentication(self::PROVIDER_ID) !== null;
     }
 
     /**
