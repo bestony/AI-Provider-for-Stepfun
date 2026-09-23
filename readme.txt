@@ -3,7 +3,7 @@ Contributors:      bestony
 Tags:              ai, connector, stepfun, artificial-intelligence, vision
 Requires at least: 7.0
 Tested up to:      7.1
-Stable tag:        1.2.1
+Stable tag:        1.2.2
 Requires PHP:      7.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -206,6 +206,10 @@ This service is provided by StepFun:
 
 == Changelog ==
 
+= 1.2.2 =
+* New plugin icon and refreshed banners for the WordPress.org directory listing. The distributed
+  plugin files are otherwise unchanged.
+
 = 1.2.1 =
 * Fixed the Terms of Service and Privacy Policy links: StepFun moved its legal pages from
   `/docs/zh/terms/*` to `/docs/zh/agreement/*`, so the previous links returned 404.
@@ -238,6 +242,10 @@ This service is provided by StepFun:
   text-to-image generation with StepFun (阶跃星辰) models.
 
 == Upgrade Notice ==
+
+= 1.2.2 =
+Directory listing artwork only: a new plugin icon and banners. No code change, so an existing
+install needs no action.
 
 = 1.2.1 =
 Documentation and packaging fixes only: corrected the Terms of Service and Privacy Policy links, and
