@@ -95,8 +95,8 @@ StepFun. Your API key is stored on your own site and is only ever sent to the St
 above. Nothing is sent until your site actually asks the AI Client for a generation.
 
 * Platform and docs: <https://platform.stepfun.com/>
-* Terms of Service: <https://platform.stepfun.com/docs/zh/terms/terms-of-service>
-* Privacy Policy: <https://platform.stepfun.com/docs/zh/terms/privacy-policy>
+* Terms of Service: <https://platform.stepfun.com/docs/zh/agreement/userservice>
+* Privacy Policy: <https://platform.stepfun.com/docs/zh/agreement/userprivacy>
 * International platform: <https://platform.stepfun.ai/>
 
 ## Development

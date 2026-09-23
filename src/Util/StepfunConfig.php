@@ -26,7 +26,7 @@ final class StepfunConfig
      *
      * @var string
      */
-    public const VERSION = '1.2.0';
+    public const VERSION = '1.2.1';
 
     /**
      * The option the Settings → Bestony AI Provider for StepFun page stores the chosen base URL in.

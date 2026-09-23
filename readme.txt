@@ -3,7 +3,7 @@ Contributors:      bestony
 Tags:              ai, connector, stepfun, artificial-intelligence, vision
 Requires at least: 7.0
 Tested up to:      7.1
-Stable tag:        1.2.0
+Stable tag:        1.2.1
 Requires PHP:      7.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -27,7 +27,8 @@ Adds [StepFun](https://platform.stepfun.com/) (阶跃星辰) as a provider for t
 
 == Screenshots ==
 
-1. The StepFun connector card on Settings → Connectors, with the API key field.
+1. Choosing StepFun as the provider, and one of its Step models, for an AI feature such as Alt Text Generation.
+2. Settings → Bestony AI Provider for StepFun, picking which StepFun or Step Plan API host the provider talks to.
 
 == Installation ==
 
@@ -199,11 +200,18 @@ configured above.
 This service is provided by StepFun:
 
 * Platform and documentation: [https://platform.stepfun.com/](https://platform.stepfun.com/)
-* Terms of Service: [https://platform.stepfun.com/docs/zh/terms/terms-of-service](https://platform.stepfun.com/docs/zh/terms/terms-of-service)
-* Privacy Policy: [https://platform.stepfun.com/docs/zh/terms/privacy-policy](https://platform.stepfun.com/docs/zh/terms/privacy-policy)
+* Terms of Service: [https://platform.stepfun.com/docs/zh/agreement/userservice](https://platform.stepfun.com/docs/zh/agreement/userservice)
+* Privacy Policy: [https://platform.stepfun.com/docs/zh/agreement/userprivacy](https://platform.stepfun.com/docs/zh/agreement/userprivacy)
 * International platform: [https://platform.stepfun.ai/](https://platform.stepfun.ai/)
 
 == Changelog ==
+
+= 1.2.1 =
+* Fixed the Terms of Service and Privacy Policy links: StepFun moved its legal pages from
+  `/docs/zh/terms/*` to `/docs/zh/agreement/*`, so the previous links returned 404.
+* The release zip no longer includes the `.wordpress-org` directory, which is only used for the
+  WordPress.org plugin directory listing.
+* Added screenshots for picking StepFun as a provider and for the API host setting.
 
 = 1.2.0 =
 * Changed the plugin slug and text domain to `bestony-ai-provider-for-stepfun` and the plugin name to
@@ -230,6 +238,10 @@ This service is provided by StepFun:
   text-to-image generation with StepFun (阶跃星辰) models.
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+Documentation and packaging fixes only: corrected the Terms of Service and Privacy Policy links, and
+the release zip no longer ships the `.wordpress-org` directory. No behaviour change.
 
 = 1.2.0 =
 Renames the plugin slug, folder, text domain and plugin name. Replace the plugin folder with the new
