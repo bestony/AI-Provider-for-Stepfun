@@ -44,7 +44,8 @@ case "$part" in
     patch) patch=$((patch + 1)) ;;
 esac
 next="$major.$minor.$patch"
-tag="v$next"
+# This repo's tags carry no "v" prefix (1.2.1, not v1.2.1); the workflows strip one if present.
+tag="$next"
 
 if [ "$push" = true ] && git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
     echo "tag $tag already exists" >&2
